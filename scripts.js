@@ -155,9 +155,10 @@ function buildObservationForm(teachers) {
 
   const inputClass = createInput('Observation_Class', 'Class...');
   const inputFocus = createInput('Observation_Focus', 'Focus...');
-  const inputStrengths = createInput('Observation_Strengths', 'Strengths...');
-  const inputWeaknesses = createInput('Observation_Weaknesses', 'Areas for development...');
-  const inputComments = createInput('Observation_Comments', 'Other comments...');
+  const inputStrengths = createTextarea('Observation_Strengths', 'Strengths...');
+  const inputWeaknesses = createTextarea('Observation_Weaknesses', 'Areas for development...');
+  const inputComments = createTextarea('Observation_Comments', 'Other comments...');
+
 
   const buttonSubmit = document.createElement('input');
   buttonSubmit.type = 'submit';
@@ -186,7 +187,7 @@ function buildObservationForm(teachers) {
 
     if (response.ok) {
       const result = await response.json();
-      alert(`Observation created successfully: ${result.id}`);
+      alert(`Observation created!`);
       window.location.href = '/';  // EN Redirect to list after submission / BR: Redirecionar para a lista após o envio
     } else {
       const error = await response.json();
@@ -206,4 +207,14 @@ function createInput(name, placeholder) {
   input.placeholder = placeholder;
   input.className = 'form-control mb-3';
   return input;
+}
+
+// EN: Utility function to create textarea fields / BR: Função utilitária para criar áreas de texto
+function createTextarea(name, placeholder) {
+  const textarea = document.createElement('textarea');
+  textarea.name = name;
+  textarea.placeholder = placeholder;
+  textarea.className = 'form-control mb-3';
+  textarea.rows = 4; // EN: Number of visible rows / BR: Número de linhas visíveis
+  return textarea;
 }
