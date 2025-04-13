@@ -1,0 +1,110 @@
+/* ======= General Styles / Estilos Gerais ======= */
+body {
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  color: #333333;
+  margin: 0;
+  padding: 0;
+}
+
+/* ======= Header & Title / Cabeçalho e Título ======= */
+header {
+  background-color: #87CEEB; /* EN: Sky blue / BR: Azul céu */
+  padding: 20px 0;
+  text-align: center;
+}
+
+h1 {
+  font-size: 4em;
+  color: #FFFFFF; /* EN: White / BR: Branco */
+  margin-bottom: 0;
+}
+
+.header-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* ======= Navigation Buttons / Botões de Navegação ======= */
+.flex-container {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
+/* ======= Headings / Cabeçalhos ======= */
+h2 {
+  font-size: 2em;
+  text-align: center;
+  padding: 8px 0;
+}
+
+/* ======= Forms / Formulários ======= */
+form {
+  padding: 0 20px;
+  max-width: 600px;
+  margin: 0 auto; /* EN: Center form horizontally / BR: Centraliza o formulário horizontalmente */
+}
+
+textarea.custom-textarea {
+  height: 150px !important;
+  width: 100%;
+  border: 1px solid #ced4da;
+  border-radius: 10px;
+  text-align: left;
+  padding: 8px;
+  font-size: 1em;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  white-space: pre-wrap;
+}
+
+input, select {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+/* ======= Tables / Tabelas ======= */
+table {
+  margin: 0 auto;
+  width: 95%;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 12px 20px;
+  border-bottom: 1px solid #ccc;
+  vertical-align: middle;
+}
+
+th {
+  text-align: center;
+  background-color: #f2f2f2;
+}
+
+td {
+  text-align: left;
+}
+
+/* ======= Action Buttons in Table / Botões de ação na tabela ======= */
+td .btn {
+  margin: 2px;
+}
+
+td:last-child {
+  text-align: center;
+}
+
+/* ======= Observation Details / Detalhes da Observação ======= */
+.observation-details {
+  padding-left: 20px;
+}
+
+/* ======= Utilities ======= */
+.centre {
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
