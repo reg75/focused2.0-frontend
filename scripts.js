@@ -1,5 +1,5 @@
 // js/scripts.js
-console.log("scripts.js loaded");
+console.log("scripts.js loaded"); // Debugging
 
 document.addEventListener('DOMContentLoaded', () => {
   const isNewObservationPage = window.location.pathname === '/new_observation';
@@ -97,7 +97,7 @@ function confirmDelete(id) {
       })
       .then(data => {
         alert(data.message || "Observation deleted!");
-        fetchObservations(); // Refresh list
+        fetchObservations(); // EN: Refresh list / BR: Atualizar lista
       })
       .catch(error => {
         console.error("Error deleting observation:", error);
@@ -106,7 +106,7 @@ function confirmDelete(id) {
   }
 }
 
-// EN: View single observation details / BR: Ver detalhes de uma observação
+// EN: View details of an observation / BR: Ver detalhes de uma observação
 function viewObservation(id) {
   fetch(`/api/view/${id}`)
     .then(response => {
@@ -136,7 +136,7 @@ function viewObservation(id) {
     });
 }
 
-// EN: Build and handle the observation form / BR: Criar e manipular o formulário de observação
+// EN: Build and handle observation form / BR: Criar e manipular o formulário de observação
 function buildObservationForm(teachers) {
   const container = document.getElementById('content-block');
   const form = document.createElement('form');
@@ -187,14 +187,14 @@ function buildObservationForm(teachers) {
     if (response.ok) {
       const result = await response.json();
       alert(`Observation created successfully: ${result.id}`);
-      window.location.href = '/';  // ✅ Redirect to list after submission
+      window.location.href = '/';  // EN Redirect to list after submission / BR: Redirecionar para a lista após o envio
     } else {
       const error = await response.json();
       alert(`Error: ${error.detail || 'Could not create observation'}`);
     }
   });
 
-  container.innerHTML = ''; // Clear any existing content
+  container.innerHTML = ''; 
   container.appendChild(form);
 }
 

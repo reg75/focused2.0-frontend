@@ -8,14 +8,14 @@ body {
 
 /* ======= Header & Title / Cabeçalho e Título ======= */
 header {
-  background-color: #87CEEB; /* EN: Sky blue / BR: Azul céu */
+  background-color: #87CEEB !important; /* EN: Sky blue / BR: Azul céu */
   padding: 20px 0;
   text-align: center;
 }
 
 h1 {
   font-size: 4em;
-  color: #FFFFFF; /* EN: White / BR: Branco */
+  color: #FFFFFF !important; /* EN: White / BR: Branco */
   margin-bottom: 0;
 }
 
