@@ -8,13 +8,13 @@
   <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
   
   <!-- EN: Include Custom CSS / BR: Incluir CSS personalizado -->
-  <link rel="stylesheet" href="/frontend/styles.css">
+  <link rel="stylesheet" href="/static/styles.css">
   
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <!-- EN: Include Custom JS / BR: Incluir JS personalizado -->
-  <script src="/frontend/scripts.js" defer></script>
+  <script src="/static/scripts.js" defer></script>
 </head>
 <body>
   <!-- EN: Header section / BR: Seção do cabeçalho -->
@@ -38,8 +38,12 @@
 
   <!-- EN: Main content block / BR: Bloco de conteúdo principal -->
   <main class="container" id="content-block">
+
+       
     <!-- EN: Content here rendered by JavaScript / BR: BR: Conteúdo aqui renderizado por JavaScript -->
-    <p class="text-muted">Loading observations...</p>
+    <div id="obs-table">
+      <p class="text-muted">Loading observations...</p>
+    </div>
   </main>
 
   <!-- EN: Include jQuery / BR: Incluir jQuery -->

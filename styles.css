@@ -108,3 +108,6 @@ td:last-child {
   margin-right: auto;
   text-align: center;
 }
+
+/* EN: Hide legacy filter bar / BR: Ocultar barra de filtros legada */
+#filters { display: none; }
