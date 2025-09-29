@@ -109,5 +109,5 @@ td:last-child {
   text-align: center;
 }
 
-/* EN: Hide legacy filter bar / BR: Ocultar barra de filtros legada */
-#filters { display: none; }
+.hidden { display: none !important; }
+.modal-content { background:#fff; padding:1rem; max-width:600px; margin:auto; }

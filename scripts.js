@@ -1,4 +1,3 @@
-// js/scripts.js
 console.log("scripts.js loaded"); // Debugging
 
 // EN: Global error trap during dev / BR: Captura global de erros no dev
@@ -11,7 +10,7 @@ window.addEventListener('error', (e) => {
 });
 
 /* ===========================
-   API LAYERv
+   API LAYER
    =========================== */
 // EN: Unified fetch helpers -> always return {ok,status,data} / BR: Helpers unificados
 async function apiRequest(method, url, body) {
@@ -46,6 +45,33 @@ function flash(kind, msg) {
 
 // EN: In-memory caches for dropdowns / BR: Cache em memória
 const DATA_CACHE = { teachers: [], departments: [], focus: [] };
+
+// EN: Fill a <select> with options + preselect / BR: Preencher <select> com opções + pré-seleção
+function fillSelect(selectEl, items, placeholder = 'Select…', selectedId = null) {
+  if (!selectEl) return;
+  const opts = [
+    `<option value="" disabled ${selectedId==null ? 'selected' : ''}>${placeholder}</option>`,
+    ...items.map(it => `<option value="${it.id}" ${String(it.id)===String(selectedId)?'selected':''}>${it.name}</option>`)
+  ];
+  selectEl.innerHTML = opts.join('');
+}
+
+// EN: Load lookups with cache / BR: Carregar listas com cache
+async function loadLookups() {
+  if (DATA_CACHE.teachers.length && DATA_CACHE.departments.length && DATA_CACHE.focus.length) {
+    return {
+      teachers: DATA_CACHE.teachers,
+      departments: DATA_CACHE.departments,
+      focusAreas: DATA_CACHE.focus,
+    };
+  }
+  const [teachers, departments, focus] = await Promise.all([getTeachers(), getDepartments(), getFocusAreas()]);
+  DATA_CACHE.teachers = teachers;
+  DATA_CACHE.departments = departments;
+  DATA_CACHE.focus = focus;
+  return { teachers, departments, focusAreas: focus };
+}
+
 
 /* ===========================
    ADAPTERS (normalize shapes)
@@ -85,7 +111,7 @@ async function getObservations() {
 }
 
 async function updateObservation(id, body) {
-  return API.put(`/api/observation/${id}`, body);
+  return API.put(`/api/observations/${id}`, body);
 }
 
 // EN: Backend route should trigger server-side mailer / BR: Rota no backend dispara o mailer
@@ -191,6 +217,7 @@ function renderObservations(observations) {
         <td>${formattedDate}</td>
         <td>
           <button class="btn btn-sm btn-info" onclick="viewObservation(${obs.Observation_ID})">View</button>
+          <button class="btn btn-sm btn-warning" onclick="editObservation(${obs.Observation_ID})">Edit</button>
           <button class="btn btn-sm btn-danger" onclick="confirmDelete(${obs.Observation_ID})">Delete</button>
           <a href="/api/pdf/${obs.Observation_ID}" class="btn btn-sm btn-secondary">PDF</a>
         </td>
@@ -406,4 +433,101 @@ function buildObservationForm(teachers, departments, focus) {
     }
   });
 }
+/* ===========================
+   EDIT MODAL
+   =========================== */
+const editModal = document.getElementById('editModal');
+const editForm  = document.getElementById('editForm');
+const editCancelBtn = document.getElementById('editCancelBtn');
+const editSaveBtn   = document.getElementById('editSaveBtn');
 
+function showEditModal() {
+  if (!editModal) return;
+  editModal.style.display = 'block';      // override Bootstrap
+  editModal.classList.remove('hidden');
+  editModal.setAttribute('aria-hidden','false');
+}
+function hideEditModal() {
+  if (!editModal) return;
+  editModal.style.display = 'none';       // override Bootstrap
+  editModal.classList.add('hidden');
+  editModal.setAttribute('aria-hidden','true');
+}
+
+async function openEditModal(observationId) {
+  try {
+    const res = await API.get(`/api/observations/${observationId}`);
+    if (!res.ok) throw new Error(res.data?.detail || `Failed to fetch ${observationId}`);
+    const obs = res.data;
+
+    const { teachers, departments, focusAreas } = await loadLookups();
+
+    fillSelect(document.getElementById('Observation_Teacher_Edit'), teachers, 'Select teacher…',    obs.Observation_Teacher);
+    fillSelect(document.getElementById('Observation_Department_Edit'), departments, 'Select dept…', obs.Observation_Department);
+    fillSelect(document.getElementById('Observation_Focus_Edit'), focusAreas, 'Select focus…',      obs.Observation_Focus);
+
+    document.getElementById('Observation_Class_Edit').value      = obs.Observation_Class ?? '';
+    document.getElementById('Observation_Strengths_Edit').value  = obs.Observation_Strengths ?? '';
+    document.getElementById('Observation_Weaknesses_Edit').value = obs.Observation_Weaknesses ?? '';
+    document.getElementById('Observation_Comments_Edit').value   = obs.Observation_Comments ?? '';
+
+    const resendEl = document.getElementById('Resend_Email_Edit');
+    if (resendEl) resendEl.checked = false; // default off
+
+    editForm.dataset.obsId = String(obs.Observation_ID);
+    showEditModal();
+  } catch (err) {
+    console.error('[edit] open error', err);
+    flash('danger', 'Could not open edit form.');
+  }
+}
+
+// EN: Bridge for inline onclick in table / BR: Ponte para onclick na tabela
+async function editObservation(observationId) {
+  openEditModal(observationId);
+}
+
+window.editObservation = editObservation;
+
+
+if (editCancelBtn) editCancelBtn.addEventListener('click', hideEditModal);
+if (editModal) {
+  editModal.addEventListener('click', (e) => { if (e.target === editModal) hideEditModal(); });
+}
+
+if (editForm) {
+  editForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const obsId = parseInt(editForm.dataset.obsId || '0', 10);
+    if (!obsId) return;
+
+    const payload = {
+      Observation_Teacher:    parseInt(document.getElementById('Observation_Teacher_Edit').value, 10),
+      Observation_Department: parseInt(document.getElementById('Observation_Department_Edit').value, 10),
+      Observation_Focus:      parseInt(document.getElementById('Observation_Focus_Edit').value, 10),
+      Observation_Class:      (document.getElementById('Observation_Class_Edit').value || '').trim(),
+      Observation_Strengths:  (document.getElementById('Observation_Strengths_Edit').value || '').trim(),
+      Observation_Weaknesses: (document.getElementById('Observation_Weaknesses_Edit').value || '').trim(),
+      Observation_Comments:   (document.getElementById('Observation_Comments_Edit').value || '').trim(),
+    };
+
+    const resend = document.getElementById('Resend_Email_Edit')?.checked;
+    if (resend) payload.resend_email = true; // backend: optional flag on PUT
+
+    editSaveBtn && (editSaveBtn.disabled = true);
+
+    try {
+      const res = await updateObservation(obsId, payload);
+      if (!res.ok) throw new Error(res.data?.detail || `HTTP ${res.status}`);
+      hideEditModal();
+      const list = await getObservations();
+      renderObservations(list);
+      flash('success', 'Observation updated.');
+    } catch (err) {
+      console.error('[edit] save error', err);
+      flash('danger', 'Update failed.');
+    } finally {
+      editSaveBtn && (editSaveBtn.disabled = false);
+    }
+  });
+}

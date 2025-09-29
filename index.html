@@ -51,6 +51,47 @@
   
   <!-- EN: Include Bootstrap JS / BR: Incluir JS do Bootstrap -->
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+
+  <!-- EN: Edit Observation Modal / BR: Modal de Edição de Observação -->
+<div id="editModal" class="modal hidden" aria-hidden="true">
+  <div class="modal-content">
+    <h3>Edit Observation</h3>
+    <form id="editForm">
+      <label>Teacher</label>
+      <select id="Observation_Teacher_Edit" required></select>
+
+      <label>Department</label>
+      <select id="Observation_Department_Edit" required></select>
+
+      <label>Focus</label>
+      <select id="Observation_Focus_Edit" required></select>
+
+      <label>Class</label>
+      <input id="Observation_Class_Edit" type="text" maxlength="16" />
+
+      <label>Strengths</label>
+      <textarea id="Observation_Strengths_Edit" rows="3"></textarea>
+
+      <label>Weaknesses</label>
+      <textarea id="Observation_Weaknesses_Edit" rows="3"></textarea>
+
+      <label>Comments</label>
+      <textarea id="Observation_Comments_Edit" rows="3"></textarea>
+
+      <label class="checkbox">
+        <input type="checkbox" id="Resend_Email_Edit" />
+        Re-send observation PDF via email
+      </label>
+
+      <div class="modal-actions">
+        <button type="button" id="editCancelBtn">Cancel</button>
+        <button type="submit" id="editSaveBtn">Save changes</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+
 </body>
 </html>
 
