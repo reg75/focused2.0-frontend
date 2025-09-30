@@ -1,0 +1,9 @@
+# Logs
+*.log
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Node/npm (if ever used locally)
+node_modules/
+dist/
